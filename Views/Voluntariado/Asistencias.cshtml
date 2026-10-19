@@ -1,0 +1,194 @@
+@model IEnumerable<VoluntariadoAmbiental.Models.Asistencia>
+@{
+    ViewData["Title"] = "Acreditación de Horas";
+    var proyectos = ViewBag.Proyectos as List<VoluntariadoAmbiental.Models.Proyecto>;
+    var idProyectoSel = ViewBag.IdProyectoSeleccionado as int?;
+}
+
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1" style="color: var(--color-forest);">
+                Registro y Acreditación de Horas Sociales
+            </h3>
+            <p class="text-muted small mb-0">Verifica la asistencia de los estudiantes y certifica las horas completadas.</p>
+        </div>
+        <div>
+            <a asp-action="Gestion" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-list-check me-1"></i> Panel de Campañas
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtro por Convocatoria -->
+    <div class="bg-white border rounded-3 p-3 shadow-sm mb-4">
+        <form method="get" asp-action="Asistencias" class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <label class="form-label small fw-semibold text-muted mb-1">Filtrar por Convocatoria:</label>
+                <select name="idProyecto" class="form-select eco-select">
+                    <option value="">-- Todas las Convocatorias --</option>
+                    @if (proyectos != null)
+                    {
+                        foreach (var p in proyectos)
+                        {
+                            <option value="@p.nIdProyecto" selected="@(idProyectoSel == p.nIdProyecto ? "selected" : null)">
+                                @p.sTitulo (@p.sNombreMunicipio) - @p.nHorasAcreditar hrs
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-eco-primary w-100">
+                    <i class="fa-solid fa-filter me-1"></i> Filtrar
+                </button>
+                <a asp-action="Asistencias" class="btn btn-outline-secondary" title="Ver todos">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de Estudiantes e Inscripciones -->
+    <div class="eco-table-wrapper">
+        <div class="table-responsive">
+            <table class="table eco-table">
+                <thead>
+                    <tr>
+                        <th>Estudiante & Carnet</th>
+                        <th>Institución</th>
+                        <th>Campaña & Horas Meta</th>
+                        <th>Horas Validadas</th>
+                        <th>Estado</th>
+                        <th>Fecha Registro</th>
+                        <th class="text-end">Acreditar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted small">
+                                No se encontraron registros de estudiantes para la convocatoria seleccionada.
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var asis in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="text-dark d-block">@asis.sNombreVoluntario</strong>
+                                <span class="badge bg-light text-dark border small">
+                                    @asis.sCarnet
+                                </span>
+                            </td>
+                            <td>
+                                <small class="text-secondary fw-semibold">@asis.sInstitucion</small>
+                                <div class="small text-muted">@asis.sEmail</div>
+                            </td>
+                            <td>
+                                <strong class="d-block text-dark small">@asis.sTituloProyecto</strong>
+                                <span class="badge bg-success-subtle text-success">Meta: @asis.nHorasAcreditar hrs</span>
+                            </td>
+                            <td>
+                                <span class="fs-6 fw-bold @(asis.nHorasCompletadas > 0 ? "text-success" : "text-muted")">
+                                    @asis.nHorasCompletadas hrs
+                                </span>
+                            </td>
+                            <td>
+                                @if (asis.sEstadoAsistencia == "Completado")
+                                {
+                                    <span class="eco-badge eco-badge-active">
+                                        Completado
+                                    </span>
+                                }
+                                else if (asis.sEstadoAsistencia == "Inscrito")
+                                {
+                                    <span class="eco-badge eco-badge-completed">
+                                        Inscrito
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="eco-badge eco-badge-finalized">
+                                        @asis.sEstadoAsistencia
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <small class="text-muted">@asis.dFechaInscripcion.ToString("dd/MM/yyyy")</small>
+                                @if (asis.dFechaValidacion.HasValue)
+                                {
+                                    <div class="small text-success">
+                                        Validado: @asis.dFechaValidacion.Value.ToString("dd/MM/yyyy")
+                                    </div>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-eco-outline" data-bs-toggle="modal" data-bs-target="#modalHoras-@asis.nIdAsistencia">
+                                    <i class="fa-solid fa-pen-to-square me-1"></i> Acreditar
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- MODAL DE VALIDACIÓN DE HORAS -->
+                        <div class="modal fade" id="modalHoras-@asis.nIdAsistencia" tabindex="-1" aria-labelledby="modalLabel-@asis.nIdAsistencia" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content rounded-3 border-0 shadow">
+                                    <div class="modal-header border-bottom px-4 pt-3 pb-2">
+                                        <h5 class="modal-title fw-bold" id="modalLabel-@asis.nIdAsistencia">
+                                            Acreditar Horas del Estudiante
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    @using (Html.BeginForm("ActualizarHoras", "Voluntariado", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="nIdAsistencia" value="@asis.nIdAsistencia" />
+                                        <input type="hidden" name="idProyectoRedirect" value="@idProyectoSel" />
+
+                                        <div class="modal-body p-4 text-start">
+                                            <div class="p-3 bg-light rounded-3 mb-3 border">
+                                                <div class="small text-muted text-uppercase fw-semibold">Estudiante</div>
+                                                <strong class="text-dark">@asis.sNombreVoluntario</strong> (@asis.sCarnet)
+                                                <div class="small text-muted mt-2 text-uppercase fw-semibold">Actividad</div>
+                                                <div class="small">@asis.sTituloProyecto (Meta: @asis.nHorasAcreditar horas)</div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold text-dark small">Horas Sociales Certificadas</label>
+                                                <input type="number" name="nHorasCompletadas" class="form-control eco-input" value="@asis.nHorasCompletadas" min="0" max="200" required />
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold text-dark small">Estado de la Asistencia</label>
+                                                <select name="sEstadoAsistencia" class="form-select eco-select">
+                                                    <option value="Inscrito" selected="@(asis.sEstadoAsistencia == "Inscrito" ? "selected" : null)">Inscrito (Pendiente de jornada)</option>
+                                                    <option value="Completado" selected="@(asis.sEstadoAsistencia == "Completado" ? "selected" : null)">Completado (Horas acreditadas)</option>
+                                                    <option value="No Asistió" selected="@(asis.sEstadoAsistencia == "No Asistió" ? "selected" : null)">No Asistió</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold text-dark small">Observaciones o Dictamen (Opcional)</label>
+                                                <textarea name="sObservaciones" class="form-control eco-input" rows="2" placeholder="Ej: Cumplió satisfactoriamente la jornada y presentó ficha">@asis.sObservaciones</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer border-top px-4 pb-3 pt-2">
+                                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-eco-primary btn-sm">
+                                                Guardar Acreditación
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

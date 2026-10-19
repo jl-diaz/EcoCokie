@@ -1,0 +1,123 @@
+@model IEnumerable<VoluntariadoAmbiental.Models.Proyecto>
+@{
+    ViewData["Title"] = "Puntos Verdes Comunitarios";
+    var stats = ViewBag.Stats as VoluntariadoAmbiental.Models.DashboardStats;
+}
+
+<div class="container py-5">
+    <!-- Encabezado -->
+    <div class="row align-items-center mb-5 g-4">
+        <div class="col-lg-8">
+            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-2 small">
+                Centros de Acopio y Logística
+            </span>
+            <h2 class="fw-bold display-6" style="color: var(--color-forest);">
+                Puntos Verdes Comunitarios
+            </h2>
+            <p class="text-muted mb-0">
+                Instalaciones fijas y módulos barriales donde los voluntarios entregan materiales reciclables, reciben inducción y se concentra la logística de servicio social.
+            </p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+            <div class="p-3 bg-white border rounded-3 shadow-sm d-inline-block text-start">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="eco-brand-badge" style="width: 44px; height: 44px;">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div>
+                        <div class="fs-4 fw-bold text-dark">@(stats?.TotalPuntosVerdesActivos ?? 4) Puntos</div>
+                        <small class="text-muted">Activos en El Salvador</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clasificación de Residuos -->
+    <div class="row g-3 mb-5">
+        <div class="col-md-3 col-6">
+            <div class="p-3 bg-white border rounded-3 text-center shadow-sm h-100">
+                <i class="fa-solid fa-bottle-water fa-2x text-primary mb-2"></i>
+                <h6 class="fw-bold mb-1 small">Plásticos PET & HDPE</h6>
+                <small class="text-muted" style="font-size: 0.75rem;">Botellas y envases limpios</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="p-3 bg-white border rounded-3 text-center shadow-sm h-100">
+                <i class="fa-solid fa-laptop fa-2x text-warning mb-2"></i>
+                <h6 class="fw-bold mb-1 small">Residuos RAEE</h6>
+                <small class="text-muted" style="font-size: 0.75rem;">Electrónicos y cables</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="p-3 bg-white border rounded-3 text-center shadow-sm h-100">
+                <i class="fa-solid fa-apple-whole fa-2x text-success mb-2"></i>
+                <h6 class="fw-bold mb-1 small">Orgánicos</h6>
+                <small class="text-muted" style="font-size: 0.75rem;">Compostaje comunitario</small>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="p-3 bg-white border rounded-3 text-center shadow-sm h-100">
+                <i class="fa-solid fa-newspaper fa-2x text-secondary mb-2"></i>
+                <h6 class="fw-bold mb-1 small">Papel y Cartón</h6>
+                <small class="text-muted" style="font-size: 0.75rem;">Materiales secos y limpios</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Directorio -->
+    <h4 class="fw-bold mb-4" style="color: var(--color-forest);">
+        Directorio de Estaciones Comunitarias
+    </h4>
+
+    <div class="row g-4">
+        @foreach (var p in Model.Where(x => !string.IsNullOrEmpty(x.sPuntoVerde)))
+        {
+            <div class="col-lg-6">
+                <div class="bg-white border rounded-3 p-4 shadow-sm h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill small">
+                                <i class="fa-solid fa-location-dot me-1"></i> @p.sNombreMunicipio, @p.sDepartamento
+                            </span>
+                            <span class="badge bg-light text-dark border px-3 py-1 rounded-pill small">
+                                @p.nHorasAcreditar hrs
+                            </span>
+                        </div>
+
+                        <h5 class="fw-bold text-dark mb-2">@p.sPuntoVerde</h5>
+                        <p class="text-muted small mb-3">
+                            <strong>Ubicación:</strong> @p.sUbicacionDetallada
+                        </p>
+
+                        <div class="p-3 bg-light rounded-3 mb-3 border">
+                            <span class="small text-muted d-block text-uppercase fw-semibold mb-1" style="font-size: 0.7rem;">Causa Vinculada:</span>
+                            <strong class="text-dark small">@p.sTitulo</strong>
+                            <div class="small text-muted mt-1" style="font-size: 0.75rem;">
+                                <i class="fa-regular fa-calendar me-1"></i> Fecha: @p.dFechaEvento.ToString("dd/MM/yyyy")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <span class="text-muted small" style="font-size: 0.75rem;">
+                            @p.sOrganizador
+                        </span>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Organizacion"))
+                        {
+                            <a asp-action="Detalle" asp-route-id="@p.nIdProyecto" class="btn btn-outline-secondary btn-sm">
+                                Ver Detalle
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Inscribir" asp-route-id="@p.nIdProyecto" class="btn btn-eco-primary btn-sm">
+                                Postularme
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

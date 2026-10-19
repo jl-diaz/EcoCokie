@@ -1,0 +1,109 @@
+@model VoluntariadoAmbiental.Models.RegistroViewModel
+@{
+    ViewData["Title"] = "Registro de Cuenta";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="eco-form-card shadow-lg">
+                <div class="text-center mb-4">
+                    <img src="~/img/LogoEcoCokie.png" alt="EcoCokie" style="width: 76px; height: 76px; object-fit: contain; margin-bottom: 10px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));" />
+                    <h3 class="fw-bold mb-1" style="color: var(--color-forest);">Crear Nueva Cuenta en EcoCokie</h3>
+                    <p class="text-muted small">Únete a la comunidad de voluntariado ambiental y puntos verdes</p>
+                </div>
+
+                @using (Html.BeginForm("Registro", "Cuenta", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger p-2 small rounded-3" })
+
+                    <!-- Selección de Rol -->
+                    <div class="mb-4">
+                        <label class="eco-form-label mb-2"><i class="fa-solid fa-users me-1 text-success"></i> ¿Cómo participarás en la plataforma?</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="sRol" id="rolEstudiante" value="Estudiante" checked autocomplete="off" onchange="toggleRol(this.value)">
+                                <label class="btn btn-outline-success w-100 p-3 text-start rounded-3" for="rolEstudiante">
+                                    <strong class="d-block"><i class="fa-solid fa-graduation-cap me-1"></i> Estudiante</strong>
+                                    <small class="text-muted d-block" style="font-size: 0.75rem;">Para cumplir y certificar horas sociales.</small>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="sRol" id="rolOrganizacion" value="Organizacion" autocomplete="off" onchange="toggleRol(this.value)">
+                                <label class="btn btn-outline-primary w-100 p-3 text-start rounded-3" for="rolOrganizacion">
+                                    <strong class="d-block"><i class="fa-solid fa-building-user me-1"></i> Organización</strong>
+                                    <small class="text-muted d-block" style="font-size: 0.75rem;">Para publicar convocatorias y validar horas.</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="eco-input-group mb-3">
+                        <label class="eco-form-label" id="lblNombre">Nombre Completo del Estudiante</label>
+                        @Html.TextBoxFor(m => m.sNombreCompleto, new { @class = "form-control eco-input", placeholder = "Ej: Carlos Eduardo Martínez", required = "required" })
+                        @Html.ValidationMessageFor(m => m.sNombreCompleto, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="eco-input-group mb-3">
+                        <label class="eco-form-label">Correo Electrónico</label>
+                        @Html.TextBoxFor(m => m.sEmail, new { @class = "form-control eco-input", type = "email", placeholder = "correo@ejemplo.com", required = "required" })
+                        @Html.ValidationMessageFor(m => m.sEmail, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="eco-input-group mb-3">
+                        <label class="eco-form-label">Contraseña (Mínimo 6 caracteres)</label>
+                        @Html.PasswordFor(m => m.sPassword, new { @class = "form-control eco-input", placeholder = "••••••••", required = "required" })
+                        @Html.ValidationMessageFor(m => m.sPassword, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- Campo condicional: Carnet Estudiantil -->
+                    <div class="eco-input-group mb-3" id="campoCarnet">
+                        <label class="eco-form-label">Carnet Estudiantil / Código</label>
+                        @Html.TextBoxFor(m => m.sCarnet, new { @class = "form-control eco-input", placeholder = "Ej: CM2021001" })
+                        @Html.ValidationMessageFor(m => m.sCarnet, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="eco-input-group mb-3">
+                        <label class="eco-form-label" id="lblInstitucion">Institución Educativa / Universidad</label>
+                        @Html.TextBoxFor(m => m.sInstitucion, new { @class = "form-control eco-input", placeholder = "Ej: Universidad Don Bosco" })
+                        @Html.ValidationMessageFor(m => m.sInstitucion, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="eco-input-group mb-4">
+                        <label class="eco-form-label">Teléfono / WhatsApp</label>
+                        @Html.TextBoxFor(m => m.sTelefono, new { @class = "form-control eco-input", placeholder = "Ej: 7123-4567" })
+                        @Html.ValidationMessageFor(m => m.sTelefono, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <button type="submit" class="btn btn-eco-primary w-100 py-3 shadow mb-3">
+                        <i class="fa-solid fa-user-check me-2"></i> Registrarme y Comenzar
+                    </button>
+                }
+
+                <div class="text-center small text-muted">
+                    ¿Ya tienes una cuenta registrada? 
+                    <a asp-action="Login" class="text-success fw-bold text-decoration-none">Inicia sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleRol(rol) {
+        const campoCarnet = document.getElementById("campoCarnet");
+        const lblNombre = document.getElementById("lblNombre");
+        const lblInstitucion = document.getElementById("lblInstitucion");
+
+        if (rol === "Organizacion") {
+            campoCarnet.style.display = "none";
+            lblNombre.innerText = "Nombre de la Organización / ONG / Colectivo";
+            lblInstitucion.innerText = "Tipo de Entidad (ONG, Universidad, Municipalidad)";
+        } else {
+            campoCarnet.style.display = "block";
+            lblNombre.innerText = "Nombre Completo del Estudiante";
+            lblInstitucion.innerText = "Institución Educativa / Universidad";
+        }
+    }
+</script>

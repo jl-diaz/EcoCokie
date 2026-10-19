@@ -1,0 +1,16 @@
+## Build and visual studio artifacts
+[Bb]in/
+[Oo]bj/
+.vs/
+publish/
+*.user
+*.userosscache
+*.suo
+
+## Large executables
+cloudflared.exe
+*.exe
+
+## Local db files
+*.mdf
+*.ldf

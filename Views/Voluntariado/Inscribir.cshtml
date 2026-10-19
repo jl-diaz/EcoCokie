@@ -1,0 +1,138 @@
+@model VoluntariadoAmbiental.Models.InscripcionViewModel
+@{
+    ViewData["Title"] = "Inscripción en Convocatoria";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <!-- Resumen de la Actividad -->
+            <div class="p-4 rounded-4 mb-4 text-white shadow-sm" style="background-color: var(--color-forest);">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div>
+                        <span class="badge bg-white text-dark px-3 py-1 rounded-pill mb-2 small">
+                            @Model.sCategoriaProyecto
+                        </span>
+                        <h4 class="fw-bold mb-1 text-white">@Model.sTituloProyecto</h4>
+                        <p class="mb-0 text-white-50 small">
+                            <i class="fa-solid fa-location-dot me-1 text-warning"></i> @Model.sNombreMunicipio &bull; 
+                            <i class="fa-solid fa-recycle ms-2 me-1 text-info"></i> Punto Verde: @Model.sPuntoVerde
+                        </p>
+                    </div>
+                    <div class="text-md-end bg-black bg-opacity-25 p-3 rounded-3">
+                        <span class="d-block text-white-50 small text-uppercase fw-semibold" style="font-size: 0.72rem;">Acredita</span>
+                        <span class="fs-4 fw-bold text-white">@Model.nHorasAcreditar Horas</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Inscripción -->
+            <div class="eco-form-card">
+                <div class="eco-form-header">
+                    <h4 class="fw-bold mb-1" style="color: var(--color-forest);">
+                        Ficha de Inscripción del Estudiante
+                    </h4>
+                    <p class="text-muted small mb-0">
+                        Ingresa tus datos de contacto para formalizar tu participación y registrar la acreditación de servicio social.
+                    </p>
+                </div>
+
+                @using (Html.BeginForm("Inscribir", "Voluntariado", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.nIdProyecto)
+                    @Html.HiddenFor(m => m.sTituloProyecto)
+                    @Html.HiddenFor(m => m.sCategoriaProyecto)
+                    @Html.HiddenFor(m => m.sNombreMunicipio)
+                    @Html.HiddenFor(m => m.nHorasAcreditar)
+
+                    @Html.ValidationSummary(true, "Por favor revise los datos:", new { @class = "alert alert-danger p-3 rounded-3 small" })
+
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.Voluntario.sNombreCompleto, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.Voluntario.sNombreCompleto, new { htmlAttributes = new { @class = "form-control eco-input", placeholder = "Ej: Juan Carlos Pérez Gómez", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.Voluntario.sNombreCompleto, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.Voluntario.sCarnet, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.Voluntario.sCarnet, new { htmlAttributes = new { @class = "form-control eco-input", placeholder = "Ej: PG2021001", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.Voluntario.sCarnet, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.Voluntario.sInstitucion, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.Voluntario.sInstitucion, new { htmlAttributes = new { @class = "form-control eco-input", placeholder = "Ej: Universidad Don Bosco", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.Voluntario.sInstitucion, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.Voluntario.sEmail, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.Voluntario.sEmail, new { htmlAttributes = new { @class = "form-control eco-input", type = "email", placeholder = "estudiante@udb.edu.sv", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.Voluntario.sEmail, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.Voluntario.sTelefono, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.Voluntario.sTelefono, new { htmlAttributes = new { @class = "form-control eco-input", placeholder = "Ej: 7123-4567", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.Voluntario.sTelefono, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.Voluntario.sCarreraOAnio, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.Voluntario.sCarreraOAnio, new { htmlAttributes = new { @class = "form-control eco-input", placeholder = "Ej: Ingeniería en Ciencias de la Computación / Bachillerato" } })
+                                @Html.ValidationMessageFor(m => m.Voluntario.sCarreraOAnio, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <!-- Observaciones Totalmente Opcionales -->
+                        <div class="col-md-12">
+                            <div class="eco-input-group">
+                                <label class="eco-form-label">Observaciones o Necesidades Especiales (Opcional)</label>
+                                @Html.EditorFor(m => m.sObservaciones, new { htmlAttributes = new { @class = "form-control eco-input", placeholder = "Indica si requieres transporte desde el campus o tienes alguna observación..." } })
+                                @Html.ValidationMessageFor(m => m.sObservaciones, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-3 my-4 border">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="checkTerminos" required checked />
+                            <label class="form-check-label small text-muted" for="checkTerminos">
+                                Confirmo mi asistencia a la actividad para cumplir y acreditar mis <strong>@Model.nHorasAcreditar horas sociales</strong>.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-2">
+                        <a asp-action="Detalle" asp-route-id="@Model.nIdProyecto" class="btn btn-outline-secondary">
+                            Cancelar
+                        </a>
+
+                        <button type="submit" class="btn btn-eco-primary">
+                            <i class="fa-solid fa-check me-2"></i> Confirmar Inscripción
+                        </button>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

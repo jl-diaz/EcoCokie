@@ -1,0 +1,138 @@
+@model VoluntariadoAmbiental.Models.Proyecto
+@{
+    ViewData["Title"] = "Editar Convocatoria";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="eco-form-card">
+                <div class="eco-form-header">
+                    <h4 class="fw-bold mb-1" style="color: var(--color-forest);">
+                        Modificar Convocatoria Ambiental
+                    </h4>
+                    <p class="text-muted small mb-0">Actualiza las condiciones, cupos, horas asignadas o estado de la actividad.</p>
+                </div>
+
+                @using (Html.BeginForm("Editar", "Voluntariado", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.nIdProyecto)
+                    @Html.ValidationSummary(true, "Por favor revise los campos:", new { @class = "alert alert-danger p-3 rounded-3 small" })
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sTitulo, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.sTitulo, new { htmlAttributes = new { @class = "form-control eco-input", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.sTitulo, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sEstado, new { @class = "eco-form-label" })
+                                @Html.DropDownList("sEstado", (IEnumerable<SelectListItem>)ViewBag.Estados, new { @class = "form-control eco-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.sEstado, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sCategoria, new { @class = "eco-form-label" })
+                                @Html.DropDownList("sCategoria", (IEnumerable<SelectListItem>)ViewBag.Categorias, new { @class = "form-control eco-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.sCategoria, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.nIdMunicipio, new { @class = "eco-form-label" })
+                                @Html.DropDownList("nIdMunicipio", (IEnumerable<SelectListItem>)ViewBag.Municipios, new { @class = "form-control eco-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.nIdMunicipio, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sDescripcion, new { @class = "eco-form-label" })
+                                @Html.TextAreaFor(m => m.sDescripcion, new { @class = "form-control eco-input", rows = 4, required = "required" })
+                                @Html.ValidationMessageFor(m => m.sDescripcion, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.dFechaEvento, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.dFechaEvento, new { htmlAttributes = new { @class = "form-control eco-input", type = "date", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.dFechaEvento, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.nHorasAcreditar, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.nHorasAcreditar, new { htmlAttributes = new { @class = "form-control eco-input", type = "number", min = "1", max = "100", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.nHorasAcreditar, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.nCuposTotales, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.nCuposTotales, new { htmlAttributes = new { @class = "form-control eco-input", type = "number", min = "1", max = "500", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.nCuposTotales, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sUbicacionDetallada, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.sUbicacionDetallada, new { htmlAttributes = new { @class = "form-control eco-input", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.sUbicacionDetallada, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sPuntoVerde, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.sPuntoVerde, new { htmlAttributes = new { @class = "form-control eco-input" } })
+                                @Html.ValidationMessageFor(m => m.sPuntoVerde, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sOrganizador, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.sOrganizador, new { htmlAttributes = new { @class = "form-control eco-input", required = "required" } })
+                                @Html.ValidationMessageFor(m => m.sOrganizador, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="eco-input-group">
+                                @Html.LabelFor(m => m.sImagenUrl, new { @class = "eco-form-label" })
+                                @Html.EditorFor(m => m.sImagenUrl, new { htmlAttributes = new { @class = "form-control eco-input" } })
+                                @Html.ValidationMessageFor(m => m.sImagenUrl, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <a asp-action="Gestion" class="btn btn-outline-secondary">
+                            Cancelar
+                        </a>
+
+                        <button type="submit" class="btn btn-eco-primary">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Guardar Cambios
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

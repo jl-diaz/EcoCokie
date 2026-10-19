@@ -1,0 +1,234 @@
+@model IEnumerable<VoluntariadoAmbiental.Models.Proyecto>
+@{
+    ViewData["Title"] = "Convocatorias de Voluntariado Ambiental";
+    var stats = ViewBag.Stats as VoluntariadoAmbiental.Models.DashboardStats;
+}
+
+<!-- SECCIÓN PRINCIPAL -->
+<section class="eco-hero">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <h1 class="eco-hero-title">
+                    Participa en causas ambientales y <span>acredita tus horas</span>
+                </h1>
+                <p class="eco-hero-lead">
+                    Conectamos a estudiantes con iniciativas verificadas de reforestación, limpieza de costas y gestión de Puntos Verdes comunitarios en El Salvador.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#convocatorias" class="btn btn-eco-primary">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> Ver Convocatorias
+                    </a>
+                    <a asp-action="PuntosVerdes" class="btn btn-eco-outline">
+                        <i class="fa-solid fa-recycle me-1"></i> Red de Puntos Verdes
+                    </a>
+                </div>
+            </div>
+
+            <!-- Panel de Estadísticas -->
+            <div class="col-lg-5">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="eco-stat-card">
+                            <div class="eco-stat-icon green">
+                                <i class="fa-solid fa-tree"></i>
+                            </div>
+                            <div>
+                                <div class="eco-stat-number counter-val" data-target="@(stats?.TotalProyectosActivos ?? 0)">@(stats?.TotalProyectosActivos ?? 0)</div>
+                                <div class="eco-stat-label">Causas Activas</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="eco-stat-card">
+                            <div class="eco-stat-icon emerald">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div>
+                                <div class="eco-stat-number counter-val" data-target="@(stats?.TotalHorasAcreditadas ?? 0)">@(stats?.TotalHorasAcreditadas ?? 0)</div>
+                                <div class="eco-stat-label">Horas Certificadas</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="eco-stat-card">
+                            <div class="eco-stat-icon blue">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <div class="eco-stat-number counter-val" data-target="@(stats?.TotalVoluntariosRegistrados ?? 0)">@(stats?.TotalVoluntariosRegistrados ?? 0)</div>
+                                <div class="eco-stat-label">Voluntarios Registrados</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="eco-stat-card">
+                            <div class="eco-stat-icon amber">
+                                <i class="fa-solid fa-recycle"></i>
+                            </div>
+                            <div>
+                                <div class="eco-stat-number counter-val" data-target="@(stats?.TotalPuntosVerdesActivos ?? 0)">@(stats?.TotalPuntosVerdesActivos ?? 0)</div>
+                                <div class="eco-stat-label">Puntos Verdes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BUSCADOR Y FILTROS -->
+<div class="container" id="convocatorias">
+    <div class="eco-filter-container">
+        @using (Html.BeginForm("Index", "Voluntariado", FormMethod.Post))
+        {
+            <div class="row g-3 align-items-end">
+                <div class="col-lg-4 col-md-6">
+                    <label class="eco-form-label"><i class="fa-solid fa-tag me-1 text-success"></i> Categoría Ambiental</label>
+                    @Html.DropDownList("OpcionesCat", (IEnumerable<SelectListItem>)ViewBag.OpcionesCat, new { @class = "eco-select" })
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <label class="eco-form-label"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Municipio</label>
+                    @Html.DropDownList("OpcionesMun", (IEnumerable<SelectListItem>)ViewBag.OpcionesMun, new { @class = "eco-select" })
+                </div>
+
+                <div class="col-lg-3 col-md-8">
+                    <label class="eco-form-label"><i class="fa-solid fa-magnifying-glass me-1 text-primary"></i> Búsqueda por Palabra</label>
+                    <input type="text" name="sBusqueda" class="eco-input" placeholder="Ej: Reforestación, RAEE..." value="@ViewBag.BusquedaActual" />
+                </div>
+
+                <div class="col-lg-2 col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-eco-primary w-100">
+                        <i class="fa-solid fa-filter me-1"></i> Filtrar
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary" title="Restablecer filtros">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- LISTADO DE CONVOCATORIAS -->
+<section class="container py-5 mt-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-2 border-bottom">
+        <div>
+            <h3 class="fw-bold mb-1" style="color: var(--color-forest);">
+                Convocatorias Ambientales Disponibles
+            </h3>
+            <p class="text-muted small mb-0">Selecciona una actividad para consultar detalles o postularte.</p>
+        </div>
+        <div class="text-muted small mt-2 mt-md-0">
+            <strong>@Model.Count()</strong> convocatoria(s) encontrada(s)
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 my-3 bg-white rounded-4 border p-5 shadow-sm">
+            <i class="fa-solid fa-seedling fa-3x text-muted mb-3 opacity-50"></i>
+            <h5 class="fw-bold text-dark">No se encontraron convocatorias con los criterios indicados</h5>
+            <p class="text-muted small">Prueba modificando la categoría o el municipio en los filtros de búsqueda.</p>
+            <a asp-action="Index" class="btn btn-eco-outline btn-sm mt-2">
+                Restablecer Filtros
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                var porcentajeOcupado = item.nCuposTotales > 0 
+                    ? (int)(((double)(item.nCuposTotales - item.nCuposDisponibles) / item.nCuposTotales) * 100) 
+                    : 100;
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="eco-card">
+                        <div class="eco-card-img-wrapper">
+                            <img src="@(string.IsNullOrEmpty(item.sImagenUrl) ? "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80" : item.sImagenUrl)" 
+                                 alt="@item.sTitulo" class="eco-card-img" />
+                            <span class="eco-card-badge-category">@item.sCategoria</span>
+                            <span class="eco-card-badge-hours">
+                                @item.nHorasAcreditar Horas
+                            </span>
+                        </div>
+
+                        <div class="eco-card-body">
+                            <h4 class="eco-card-title">@item.sTitulo</h4>
+                            <p class="eco-card-desc">@item.sDescripcion</p>
+
+                            <div class="eco-meta-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span>@item.sNombreMunicipio, @item.sDepartamento</span>
+                            </div>
+
+                            <div class="eco-meta-item">
+                                <i class="fa-regular fa-calendar"></i>
+                                <span>@item.dFechaEvento.ToString("dd/MM/yyyy")</span>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(item.sPuntoVerde))
+                            {
+                                <div class="eco-punto-verde-tag">
+                                    <i class="fa-solid fa-recycle"></i>
+                                    <div>
+                                        <small class="d-block text-muted" style="font-size: 0.7rem; text-transform:uppercase;">Punto de Encuentro:</small>
+                                        <strong>@item.sPuntoVerde</strong>
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Cupos -->
+                            <div class="mt-2 mb-3">
+                                <div class="d-flex justify-content-between align-items-center small mb-1">
+                                    <span class="text-muted">Cupos disponibles:</span>
+                                    <span class="fw-semibold @(item.nCuposDisponibles <= 5 ? "text-danger" : "text-dark")">
+                                        @item.nCuposDisponibles de @item.nCuposTotales
+                                    </span>
+                                </div>
+                                <div class="eco-progress-bar">
+                                    <div class="eco-progress-fill" style="width: @porcentajeOcupado%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-auto d-flex gap-2 pt-2">
+                                <a asp-action="Detalle" asp-route-id="@item.nIdProyecto" class="btn btn-outline-secondary w-50 small">
+                                    Detalles
+                                </a>
+
+                                @if (item.nCuposDisponibles > 0 && item.sEstado != "Finalizado")
+                                {
+                                    if (User.IsInRole("Admin") || User.IsInRole("Organizacion"))
+                                    {
+                                        <a asp-action="Detalle" asp-route-id="@item.nIdProyecto" class="btn btn-outline-secondary w-50 small">
+                                            Ver Actividad
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Inscribir" asp-route-id="@item.nIdProyecto" class="btn btn-eco-primary w-50 small">
+                                            Inscribirme
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary w-50 small" disabled>
+                                        Sin Cupos
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>

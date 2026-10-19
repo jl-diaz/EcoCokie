@@ -1,0 +1,715 @@
+/* ==========================================================================
+   ECO-THEME: SISTEMA DE DISEÑO EDITORIAL Y ELEGANTE
+   Tipografía: Poppins | Paleta: Verde Botánico & Pizarra Neutra
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+:root {
+    --font-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* Tonos Verdes Botánicos de Alta Gama */
+    --color-forest: #0c382e;
+    --color-forest-dark: #07261f;
+    --color-emerald-deep: #14532d;
+    --color-emerald: #15803d;
+    --color-emerald-light: #22c55e;
+    --color-emerald-surface: #f0fdf4;
+    --color-emerald-border: #bbf7d0;
+
+    /* Superficies y Neutros Cálidos */
+    --color-bg-base: #f8fafc;
+    --color-surface: #ffffff;
+    --color-surface-hover: #f1f5f9;
+    --color-border: #e2e8f0;
+    --color-border-subtle: #f1f5f9;
+
+    /* Tipografía */
+    --color-text-main: #0f172a;
+    --color-text-muted: #475569;
+    --color-text-tertiary: #94a3b8;
+
+    /* Elevación / Sombras Naturales */
+    --shadow-soft: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+    --shadow-card: 0 4px 12px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+    --shadow-hover: 0 16px 32px -8px rgba(12, 56, 46, 0.12), 0 6px 12px -4px rgba(12, 56, 46, 0.06);
+
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-pill: 9999px;
+}
+
+html {
+    font-family: var(--font-sans);
+    color: var(--color-text-main);
+    background-color: var(--color-bg-base);
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg-base);
+    color: var(--color-text-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   TOPBAR & NAVBAR INSTITUCIONAL
+   ========================================================================== */
+.eco-topbar {
+    background-color: #082820;
+    color: #cbd5e1;
+    font-size: 0.8rem;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.eco-navbar {
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--color-border);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1040 !important;
+    transition: box-shadow 0.25s ease;
+}
+
+.eco-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--color-forest);
+    transition: opacity 0.2s ease;
+}
+.eco-brand:hover {
+    color: var(--color-forest);
+    opacity: 0.9;
+}
+
+.eco-brand-badge {
+    width: 38px;
+    height: 38px;
+    background: var(--color-forest);
+    color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 8px rgba(12, 56, 46, 0.16);
+    flex-shrink: 0;
+}
+
+.eco-brand-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1;
+}
+
+.eco-brand-title {
+    font-size: 1.22rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--color-forest);
+    letter-spacing: -0.02em;
+    margin: 0;
+    padding: 0;
+}
+
+.eco-brand-subtitle {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--color-emerald);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    margin-top: 3px;
+    white-space: nowrap;
+}
+
+.eco-sticky-sidebar {
+    position: sticky;
+    top: 90px;
+    z-index: 20 !important;
+}
+
+.eco-nav-link {
+    font-weight: 500;
+    font-size: 0.92rem;
+    color: var(--color-text-muted) !important;
+    padding: 8px 16px !important;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+.eco-nav-link:hover, .eco-nav-link.active {
+    color: var(--color-forest) !important;
+    background-color: var(--color-emerald-surface);
+}
+
+/* ==========================================================================
+   BOTONES ELEGANTES
+   ========================================================================== */
+.btn-eco-primary {
+    background-color: var(--color-forest);
+    color: #ffffff !important;
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 9px 20px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+}
+.btn-eco-primary:hover {
+    background-color: #082820;
+    box-shadow: 0 4px 12px rgba(12, 56, 46, 0.25);
+    color: #ffffff !important;
+}
+
+.btn-eco-accent {
+    background-color: var(--color-emerald);
+    color: #ffffff !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 8px 18px;
+    border-radius: 10px;
+    border: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+}
+.btn-eco-accent:hover {
+    background-color: var(--color-emerald-deep);
+    color: #ffffff !important;
+}
+
+.btn-eco-outline {
+    background-color: transparent;
+    color: var(--color-forest) !important;
+    border: 1px solid var(--color-border);
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 8px 18px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+.btn-eco-outline:hover {
+    background-color: var(--color-surface);
+    border-color: var(--color-forest);
+    color: var(--color-forest) !important;
+}
+
+/* ==========================================================================
+   HERO EDITORIAL Y ESTADÍSTICAS
+   ========================================================================== */
+.eco-hero {
+    position: relative;
+    padding: 65px 0 55px 0;
+    background: #ffffff;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.eco-hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--color-emerald-surface);
+    border: 1px solid var(--color-emerald-border);
+    padding: 5px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-emerald-deep);
+    margin-bottom: 16px;
+}
+
+.eco-hero-title {
+    font-size: 2.85rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    color: var(--color-forest);
+    margin-bottom: 16px;
+}
+
+.eco-hero-title span {
+    color: var(--color-emerald);
+}
+
+.eco-hero-lead {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    max-width: 640px;
+    margin-bottom: 28px;
+    font-weight: 400;
+    line-height: 1.7;
+}
+
+/* Tarjetas de Estadísticas */
+.eco-stat-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.eco-stat-card:hover {
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+.eco-stat-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+.eco-stat-icon.green { background: #ecfdf5; color: #166534; }
+.eco-stat-icon.blue { background: #eff6ff; color: #1e40af; }
+.eco-stat-icon.emerald { background: #f0fdf4; color: #15803d; }
+.eco-stat-icon.amber { background: #fefce8; color: #a16207; }
+
+.eco-stat-number {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-forest);
+    letter-spacing: -0.02em;
+}
+.eco-stat-label {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   BARRA DE BÚSQUEDA Y FILTRADO
+   ========================================================================== */
+.eco-filter-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    box-shadow: var(--shadow-card);
+    margin-top: -30px;
+    position: relative;
+    z-index: 20;
+}
+
+.eco-form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.eco-input, .eco-select {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    color: var(--color-text-main);
+    background-color: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    font-family: var(--font-sans);
+}
+.eco-input:focus, .eco-select:focus {
+    border-color: var(--color-emerald);
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.12);
+    outline: none;
+}
+
+/* ==========================================================================
+   TARJETAS DE CONVOCATORIAS AMBIENTALES
+   ========================================================================== */
+.eco-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.eco-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: #cbd5e1;
+}
+
+.eco-card-img-wrapper {
+    position: relative;
+    height: 190px;
+    overflow: hidden;
+    background-color: #f1f5f9;
+}
+.eco-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.eco-card:hover .eco-card-img {
+    transform: scale(1.04);
+}
+
+.eco-card-badge-category {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(12, 56, 46, 0.9);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+}
+
+.eco-card-badge-hours {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #ffffff;
+    color: var(--color-forest);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-border);
+}
+
+.eco-card-body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.eco-card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-forest);
+    line-height: 1.4;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+}
+
+.eco-card-desc {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.eco-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.84rem;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+}
+.eco-meta-item i {
+    color: var(--color-emerald);
+    width: 16px;
+}
+
+.eco-punto-verde-tag {
+    background: var(--color-emerald-surface);
+    border: 1px solid var(--color-emerald-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 10px 0 14px 0;
+    font-size: 0.82rem;
+    color: var(--color-emerald-deep);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.eco-progress-bar {
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: #e2e8f0;
+    overflow: hidden;
+    margin: 8px 0 12px 0;
+}
+.eco-progress-fill {
+    height: 100%;
+    background: var(--color-emerald);
+    border-radius: var(--radius-pill);
+}
+
+/* ==========================================================================
+   FORMULARIOS Y PANELES
+   ========================================================================== */
+.eco-form-card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 32px 36px;
+    box-shadow: var(--shadow-card);
+}
+
+.eco-form-header {
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+}
+
+.eco-input-group {
+    margin-bottom: 18px;
+}
+.eco-input-group label {
+    font-weight: 500;
+    font-size: 0.88rem;
+    color: var(--color-forest);
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* Tablas */
+.eco-table-wrapper {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+}
+
+.eco-table {
+    margin-bottom: 0;
+    width: 100%;
+}
+.eco-table thead {
+    background: #f8fafc;
+}
+.eco-table thead th {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-forest);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--color-border);
+}
+.eco-table tbody td {
+    padding: 14px 18px;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+.eco-table tbody tr:hover {
+    background-color: #fbfcfb;
+}
+
+/* Badges */
+.eco-badge {
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 0.78rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.eco-badge-active { background: #dcfce7; color: #166534; }
+.eco-badge-completed { background: #e0f2fe; color: #075985; }
+.eco-badge-finalized { background: #f1f5f9; color: #475569; }
+
+/* Footer */
+.eco-footer {
+    background: #082820;
+    color: #94a3b8;
+    padding: 55px 0 25px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 70px;
+}
+.eco-footer h5 {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+}
+.eco-footer p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+.eco-footer a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+.eco-footer a:hover {
+    color: var(--color-emerald-light);
+}
+.eco-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 20px;
+    margin-top: 35px;
+    font-size: 0.82rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS (100% RESPONSIVE)
+   ========================================================================== */
+
+/* Tablets y Laptops Compactos (<= 991px) */
+@media (max-width: 991.98px) {
+    .eco-hero {
+        padding: 45px 0 30px 0;
+    }
+    .eco-hero-title {
+        font-size: clamp(2rem, 5vw, 2.5rem);
+    }
+    .eco-filter-container {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    .eco-sticky-sidebar {
+        position: static !important;
+        top: auto;
+    }
+}
+
+/* Teléfonos Móviles y Tablets Pequeñas (<= 767px) */
+@media (max-width: 767.98px) {
+    .eco-navbar {
+        padding: 10px 0;
+    }
+    .eco-brand {
+        gap: 8px;
+    }
+    .eco-brand-badge {
+        width: 32px;
+        height: 32px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+    }
+    .eco-brand-title {
+        font-size: 1.05rem;
+    }
+    .eco-brand-subtitle {
+        font-size: 0.56rem;
+    }
+    .eco-hero {
+        padding: 28px 0 18px 0;
+    }
+    .eco-hero-pill {
+        font-size: 0.74rem;
+        padding: 4px 10px;
+        margin-bottom: 12px;
+    }
+    .eco-hero-title {
+        font-size: clamp(1.6rem, 6.5vw, 2.05rem);
+        margin-bottom: 12px;
+    }
+    .eco-hero-lead {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .eco-stat-card {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+    .eco-stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1.05rem;
+        border-radius: 10px;
+    }
+    .eco-stat-number {
+        font-size: 1.45rem;
+    }
+    .eco-stat-label {
+        font-size: 0.75rem;
+    }
+    .eco-filter-container {
+        padding: 16px;
+        margin-top: 12px;
+        border-radius: var(--radius-sm);
+    }
+    .eco-form-card {
+        padding: 20px 16px;
+        border-radius: var(--radius-sm);
+    }
+    .eco-card-body {
+        padding: 16px;
+    }
+    .eco-card-title {
+        font-size: 1.05rem;
+    }
+    .eco-footer {
+        padding: 35px 0 20px 0;
+        margin-top: 40px;
+    }
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--radius-sm);
+    }
+    .eco-table thead th,
+    .eco-table tbody td {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+    }
+}
+
+/* Teléfonos Compactos (<= 480px) */
+@media (max-width: 480px) {
+    .eco-hero-title {
+        font-size: 1.55rem;
+    }
+    .eco-input, .eco-select {
+        font-size: 16px; /* Evita auto-zoom en iOS Safari */
+    }
+    .eco-card-img-wrapper {
+        height: 165px;
+    }
+    .btn-eco-primary, .btn-eco-outline, .btn-eco-accent {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+}
+

@@ -1,0 +1,139 @@
+@model IEnumerable<VoluntariadoAmbiental.Models.Asistencia>
+@{
+    ViewData["Title"] = "Mis Horas Sociales";
+    int horasValidadas = Model.Where(m => m.sEstadoAsistencia == "Completado").Sum(m => m.nHorasCompletadas);
+    int horasEnProgreso = Model.Where(m => m.sEstadoAsistencia == "Inscrito").Sum(m => m.nHorasAcreditar);
+}
+
+<div class="container py-5">
+    <!-- Encabezado de Horas del Estudiante -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="badge bg-success-subtle text-success px-3 py-1 rounded-pill mb-1">
+                <i class="fa-solid fa-graduation-cap me-1"></i> Expediente Estudiantil
+            </span>
+            <h2 class="fw-bold mb-1" style="color: var(--eco-emerald-950);">
+                Mis Horas de Servicio Social Ecológico
+            </h2>
+            <p class="text-muted mb-0">Seguimiento oficial de tus convocatorias y acreditaciones certificadas.</p>
+        </div>
+        <div>
+            <a asp-action="Index" class="btn btn-eco-primary">
+                <i class="fa-solid fa-magnifying-glass me-1"></i> Buscar Nuevas Causas
+            </a>
+        </div>
+    </div>
+
+    <!-- Tarjetas Resumen de Horas -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="eco-stat-card border-success">
+                <div class="eco-stat-icon emerald">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <div>
+                    <div class="eco-stat-number text-success">@horasValidadas</div>
+                    <div class="eco-stat-label">Horas Certificadas</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="eco-stat-card">
+                <div class="eco-stat-icon blue">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div>
+                    <div class="eco-stat-number text-primary">@horasEnProgreso</div>
+                    <div class="eco-stat-label">Horas en Curso</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="eco-stat-card">
+                <div class="eco-stat-icon green">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div>
+                    <div class="eco-stat-number">@Model.Count()</div>
+                    <div class="eco-stat-label">Convocatorias Registradas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla Detallada -->
+    <div class="eco-table-wrapper">
+        <div class="table-responsive">
+            <table class="table eco-table">
+                <thead>
+                    <tr>
+                        <th>Causa Ecológica</th>
+                        <th>Fecha de Inscripción</th>
+                        <th>Meta del Proyecto</th>
+                        <th>Horas Acreditadas</th>
+                        <th>Estado de Asistencia</th>
+                        <th>Fecha Validación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                Aún no tienes postulaciones registradas en el sistema.
+                                <br />
+                                <a asp-action="Index" class="btn btn-eco-outline btn-sm mt-3">Explorar Convocatorias</a>
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="text-dark d-block">@item.sTituloProyecto</strong>
+                                <span class="badge bg-light text-success border">@item.sCategoria</span>
+                            </td>
+                            <td>@item.dFechaInscripcion.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <span class="badge bg-secondary-subtle text-dark">@item.nHorasAcreditar hrs</span>
+                            </td>
+                            <td>
+                                <strong class="fs-5 @(item.nHorasCompletadas > 0 ? "text-success" : "text-muted")">
+                                    @item.nHorasCompletadas hrs
+                                </strong>
+                            </td>
+                            <td>
+                                @if (item.sEstadoAsistencia == "Completado")
+                                {
+                                    <span class="eco-badge eco-badge-active">
+                                        <i class="fa-solid fa-check-double me-1"></i> Completado
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="eco-badge eco-badge-completed">
+                                        <i class="fa-solid fa-hourglass-half me-1"></i> @item.sEstadoAsistencia
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.dFechaValidacion.HasValue)
+                                {
+                                    <span class="text-success small fw-semibold">
+                                        <i class="fa-solid fa-stamp me-1"></i> @item.dFechaValidacion.Value.ToString("dd/MM/yyyy")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">Pendiente de evento</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

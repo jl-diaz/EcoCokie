@@ -1,0 +1,171 @@
+@model VoluntariadoAmbiental.Models.Usuario
+@{
+    ViewData["Title"] = "Mi Perfil de Usuario";
+    var asistencias = ViewBag.MisAsistencias as List<VoluntariadoAmbiental.Models.Asistencia>;
+    int horasTotal = asistencias?.Sum(a => a.nHorasCompletadas) ?? 0;
+}
+
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Tarjeta de Perfil -->
+        <div class="col-lg-4">
+            <div class="bg-white border rounded-4 p-4 text-center shadow-sm">
+                <div class="eco-brand-badge mx-auto mb-3" style="width: 72px; height: 72px; font-size: 2rem;">
+                    @if (Model.sRol == "Admin")
+                    {
+                        <i class="fa-solid fa-user-shield"></i>
+                    }
+                    else if (Model.sRol == "Organizacion")
+                    {
+                        <i class="fa-solid fa-building-user"></i>
+                    }
+                    else
+                    {
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    }
+                </div>
+
+                <h4 class="fw-bold text-dark mb-1">@Model.sNombreCompleto</h4>
+                <p class="text-muted small mb-3">@Model.sEmail</p>
+
+                <div class="mb-3">
+                    @if (Model.sRol == "Admin")
+                    {
+                        <span class="badge bg-dark px-3 py-2 rounded-pill fs-6">Administrador del Sistema</span>
+                    }
+                    else if (Model.sRol == "Organizacion")
+                    {
+                        <span class="badge bg-primary px-3 py-2 rounded-pill fs-6">Organización Ecológica</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success px-3 py-2 rounded-pill fs-6">Estudiante Voluntario</span>
+                    }
+                </div>
+
+                <hr />
+
+                <div class="text-start small text-secondary d-flex flex-column gap-2 mb-4">
+                    @if (!string.IsNullOrEmpty(Model.sCarnet))
+                    {
+                        <div><strong>Carnet:</strong> <span class="text-dark">@Model.sCarnet</span></div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.sInstitucion))
+                    {
+                        <div><strong>Institución:</strong> <span class="text-dark">@Model.sInstitucion</span></div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.sTelefono))
+                    {
+                        <div><strong>Teléfono:</strong> <span class="text-dark">@Model.sTelefono</span></div>
+                    }
+                    <div><strong>Miembro desde:</strong> <span class="text-dark">@Model.dFechaRegistro.ToString("dd/MM/yyyy")</span></div>
+                </div>
+
+                <a asp-action="Logout" class="btn btn-outline-danger w-100">
+                    <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+
+        <!-- Panel de Actividad y Horas del Estudiante / Organización -->
+        <div class="col-lg-8">
+            @if (Model.sRol == "Estudiante")
+            {
+                <div class="p-4 rounded-4 mb-4 text-white shadow-sm" style="background: linear-gradient(135deg, #064e3b 0%, #047857 100%);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-light text-success fw-bold px-3 py-1 rounded-pill mb-2">Servicio Social Activo</span>
+                            <h2 class="fw-bold mb-0 text-white">@horasTotal Horas Acreditadas</h2>
+                            <small class="text-white-50">Total acumulado en actividades ambientales</small>
+                        </div>
+                        <div class="bg-black bg-opacity-25 p-3 rounded-4 text-center">
+                            <span class="d-block small text-white-50">Postulaciones</span>
+                            <span class="fs-2 fw-bold text-warning">@(asistencias?.Count ?? 0)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border rounded-4 p-4 shadow-sm">
+                    <h5 class="fw-bold mb-3" style="color: var(--eco-emerald-950);">
+                        <i class="fa-solid fa-list-check text-success me-2"></i>Mis Convocatorias y Horas Registradas
+                    </h5>
+
+                    @if (asistencias == null || !asistencias.Any())
+                    {
+                        <div class="text-center py-4 text-muted">
+                            <p>Aún no te has inscrito en ninguna convocatoria ambiental.</p>
+                            <a asp-controller="Voluntariado" asp-action="Index" class="btn btn-eco-primary btn-sm">
+                                <i class="fa-solid fa-magnifying-glass me-1"></i> Explorar Causas Disponibles
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Campaña</th>
+                                        <th>Fecha Inscripción</th>
+                                        <th>Horas Validadas</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var a in asistencias)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong class="text-dark d-block">@a.sTituloProyecto</strong>
+                                                <small class="text-muted">@a.sCategoria</small>
+                                            </td>
+                                            <td>@a.dFechaInscripcion.ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                <span class="fw-bold fs-6 @(a.nHorasCompletadas > 0 ? "text-success" : "text-muted")">
+                                                    @a.nHorasCompletadas / @a.nHorasAcreditar hrs
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (a.sEstadoAsistencia == "Completado")
+                                                {
+                                                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">
+                                                        <i class="fa-solid fa-check me-1"></i> Completado
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                                                        <i class="fa-solid fa-clock me-1"></i> Inscrito
+                                                    </span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="bg-white border rounded-4 p-4 shadow-sm">
+                    <h4 class="fw-bold mb-3" style="color: var(--eco-emerald-950);">
+                        <i class="fa-solid fa-gauge-high text-success me-2"></i>Panel de Control Rápido
+                    </h4>
+                    <p class="text-secondary">
+                        Como <strong>@Model.sRol</strong>, tienes permisos para gestionar campañas ecológicas, supervisar Puntos Verdes y certificar el servicio social de los estudiantes.
+                    </p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a asp-controller="Voluntariado" asp-action="Gestion" class="btn btn-eco-primary">
+                            <i class="fa-solid fa-list-check me-1"></i> Gestionar Campañas
+                        </a>
+                        <a asp-controller="Voluntariado" asp-action="Asistencias" class="btn btn-eco-accent">
+                            <i class="fa-solid fa-clock-rotate-left me-1"></i> Acreditar Horas
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,339 @@
+@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EcoCokie | Plataforma de Servicio Social Ambiental</title>
+
+    <!-- Favicon Oficial: EcoCokie -->
+    <link rel="icon" type="image/png" href="~/favicon.png" asp-append-version="true" />
+    <link rel="apple-touch-icon" href="~/favicon.png" />
+
+    <!-- Tipografía Oficial: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- Estilos Eco-Theme -->
+    <link rel="stylesheet" href="~/css/eco-theme.css" asp-append-version="true" />
+</head>
+<body>
+
+    <!-- TOPBAR INSTITUCIONAL -->
+    <div class="eco-topbar d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fa-solid fa-leaf text-success me-1"></i>
+                <span>Plataforma Nacional de Voluntariado Ambiental y Puntos Verdes Comunitarios</span>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span><i class="fa-solid fa-graduation-cap me-1 text-success"></i> Universidad Don Bosco</span>
+                <span class="text-white-50">|</span>
+                <span><i class="fa-solid fa-location-dot me-1 text-success"></i> El Salvador</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVEGACIÓN PRINCIPAL -->
+    <header class="eco-navbar">
+        <div class="container d-flex align-items-center justify-content-between">
+            <!-- Marca -->
+            <a class="eco-brand" asp-controller="Voluntariado" asp-action="Index" style="text-decoration: none; display: inline-flex; align-items: center; gap: 10px;">
+                <img src="~/img/LogoEcoCokie.png" alt="EcoCokie" style="width: 44px; height: 44px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.12));" />
+                <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1;">
+                    <span style="font-size: 1.3rem; font-weight: 700; color: #0c382e; line-height: 1; letter-spacing: -0.02em; margin-bottom: 2px;">EcoCokie</span>
+                    <span style="font-size: 0.62rem; font-weight: 600; color: #15803d; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1; white-space: nowrap; margin: 0;">Puntos Verdes El Salvador</span>
+                </div>
+            </a>
+
+            <!-- Enlaces de Navegación -->
+            <nav class="d-none d-lg-flex align-items-center gap-1">
+                <a class="eco-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")" 
+                   asp-controller="Voluntariado" asp-action="Index">
+                    <i class="fa-solid fa-earth-americas"></i> Convocatorias
+                </a>
+                <a class="eco-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "PuntosVerdes" ? "active" : "")" 
+                   asp-controller="Voluntariado" asp-action="PuntosVerdes">
+                    <i class="fa-solid fa-recycle"></i> Puntos Verdes
+                </a>
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Organizacion"))
+                {
+                    <a class="eco-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Gestion" ? "active" : "")" 
+                       asp-controller="Voluntariado" asp-action="Gestion">
+                        <i class="fa-solid fa-list-check"></i> Mis Campañas
+                    </a>
+                    <a class="eco-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Asistencias" ? "active" : "")" 
+                       asp-controller="Voluntariado" asp-action="Asistencias">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Validar Horas
+                    </a>
+                }
+
+                @if (User.IsInRole("Estudiante"))
+                {
+                    <a class="eco-nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "MisHoras" ? "active" : "")" 
+                       asp-controller="Voluntariado" asp-action="MisHoras">
+                        <i class="fa-solid fa-award"></i> Mis Horas Sociales
+                    </a>
+                }
+            </nav>
+
+            <!-- Acciones de Usuario -->
+            <div class="d-flex align-items-center gap-2">
+                @if (User.IsInRole("Admin") || User.IsInRole("Organizacion"))
+                {
+                    <a class="btn btn-eco-primary btn-sm d-none d-sm-inline-flex" asp-controller="Voluntariado" asp-action="Crear">
+                        <i class="fa-solid fa-plus-circle"></i> Publicar Convocatoria
+                    </a>
+                }
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill px-3 dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-user-circle text-success fs-6"></i>
+                            <span class="d-none d-md-inline">@User.Identity.Name</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+                            <li class="px-3 py-2 border-bottom">
+                                <small class="text-muted d-block">Rol de Cuenta:</small>
+                                <strong class="text-success">@User.FindFirstValue(ClaimTypes.Role)</strong>
+                            </li>
+                            <li>
+                                <a class="dropdown-item py-2" asp-controller="Cuenta" asp-action="Perfil">
+                                    <i class="fa-solid fa-id-card me-2 text-muted"></i> Mi Perfil
+                                </a>
+                            </li>
+                            @if (User.IsInRole("Estudiante"))
+                            {
+                                <li>
+                                    <a class="dropdown-item py-2" asp-controller="Voluntariado" asp-action="MisHoras">
+                                        <i class="fa-solid fa-clock me-2 text-muted"></i> Mis Horas Sociales
+                                    </a>
+                                </li>
+                            }
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger py-2" asp-controller="Cuenta" asp-action="Logout">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i> Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a asp-controller="Cuenta" asp-action="Login" class="btn btn-eco-outline btn-sm">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Ingresar
+                    </a>
+                    <a asp-controller="Cuenta" asp-action="Registro" class="btn btn-eco-primary btn-sm d-none d-sm-inline-flex">
+                        Registrarme
+                    </a>
+                }
+
+                <button class="navbar-toggler d-lg-none btn btn-light border p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu">
+                    <i class="fa-solid fa-bars fs-5 text-dark"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MENÚ OFFCANVAS MÓVIL -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <div class="offcanvas-header border-bottom">
+            <div class="d-flex align-items-center gap-2">
+                <img src="~/img/LogoEcoCokie.png" alt="EcoCokie" style="width: 38px; height: 38px; object-fit: contain;" />
+                <h5 class="offcanvas-title fw-bold mb-0 text-dark" id="mobileMenuLabel">EcoCokie</h5>
+            </div>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column justify-content-between">
+            <div class="d-flex flex-column gap-2">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="p-3 bg-light rounded-3 mb-2 border">
+                        <small class="text-muted d-block">Usuario:</small>
+                        <strong class="text-dark">@User.Identity.Name</strong>
+                        <span class="badge bg-success mt-1">@User.FindFirstValue(ClaimTypes.Role)</span>
+                    </div>
+                }
+
+                <a class="eco-nav-link" asp-controller="Voluntariado" asp-action="Index">
+                    <i class="fa-solid fa-earth-americas"></i> Convocatorias Activas
+                </a>
+                <a class="eco-nav-link" asp-controller="Voluntariado" asp-action="PuntosVerdes">
+                    <i class="fa-solid fa-recycle"></i> Puntos Verdes Comunitarios
+                </a>
+
+                @if (User.IsInRole("Admin") || User.IsInRole("Organizacion"))
+                {
+                    <a class="eco-nav-link" asp-controller="Voluntariado" asp-action="Gestion">
+                        <i class="fa-solid fa-list-check"></i> Gestión de Campañas
+                    </a>
+                    <a class="eco-nav-link" asp-controller="Voluntariado" asp-action="Asistencias">
+                        <i class="fa-solid fa-clock-rotate-left"></i> Validar Horas
+                    </a>
+                    <a class="btn btn-eco-primary w-100 mt-2" asp-controller="Voluntariado" asp-action="Crear">
+                        <i class="fa-solid fa-plus"></i> Publicar Convocatoria
+                    </a>
+                }
+
+                @if (User.IsInRole("Estudiante"))
+                {
+                    <a class="eco-nav-link" asp-controller="Voluntariado" asp-action="MisHoras">
+                        <i class="fa-solid fa-award"></i> Mis Horas Sociales
+                    </a>
+                }
+
+                <hr />
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Cuenta" asp-action="Perfil" class="btn btn-outline-secondary w-100">
+                        <i class="fa-solid fa-id-card me-1"></i> Mi Perfil
+                    </a>
+                    <a asp-controller="Cuenta" asp-action="Logout" class="btn btn-outline-danger w-100 mt-1">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> Cerrar Sesión
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Cuenta" asp-action="Login" class="btn btn-eco-primary w-100">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Iniciar Sesión
+                    </a>
+                    <a asp-controller="Cuenta" asp-action="Registro" class="btn btn-outline-secondary w-100 mt-1">
+                        Registrarme
+                    </a>
+                }
+            </div>
+            <div class="text-muted small border-top pt-3">
+                <p class="mb-1 fw-semibold text-dark">EcoCokie Comunitario</p>
+                <p class="mb-0">Universidad Don Bosco &bull; El Salvador</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALERTAS DEL SISTEMA -->
+    <div class="container mt-3">
+        @if (TempData["Exito"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center gap-3 p-3 rounded-3" role="alert" style="background: #f0fdf4; color: #166534; border-left: 4px solid #16a34a !important;">
+                <i class="fa-solid fa-circle-check fs-5 text-success"></i>
+                <div class="flex-grow-1">
+                    @TempData["Exito"]
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center gap-3 p-3 rounded-3" role="alert" style="background: #fef2f2; color: #991b1b; border-left: 4px solid #dc2626 !important;">
+                <i class="fa-solid fa-circle-exclamation fs-5 text-danger"></i>
+                <div class="flex-grow-1">
+                    @TempData["Error"]
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+
+    <!-- CONTENIDO DE VISTAS -->
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER INSTITUCIONAL -->
+    <footer class="eco-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-5">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <img src="~/img/LogoEcoCokie.png" alt="EcoCokie" style="width: 38px; height: 38px; object-fit: contain;" />
+                        <span class="fs-4 fw-bold text-white">EcoCokie</span>
+                    </div>
+                    <p class="text-light-50">
+                        Iniciativa interinstitucional para la canalización de servicio social estudiantil en jornadas ecológicas y operación de estaciones de reciclaje en El Salvador.
+                    </p>
+                    <p class="small text-white-50 mb-0">
+                        Acreditación conforme al Reglamento General de Proyección Social y Servicio Social Universitario.
+                    </p>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <h5>Navegación</h5>
+                    <ul class="list-unstyled d-flex flex-column gap-2">
+                        <li><a asp-controller="Voluntariado" asp-action="Index"><i class="fa-solid fa-chevron-right me-1 small"></i> Convocatorias Abiertas</a></li>
+                        <li><a asp-controller="Voluntariado" asp-action="PuntosVerdes"><i class="fa-solid fa-chevron-right me-1 small"></i> Puntos Verdes Comunitarios</a></li>
+                        <li><a asp-controller="Cuenta" asp-action="Login"><i class="fa-solid fa-chevron-right me-1 small"></i> Acceso a la Plataforma</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <h5>Sedes y Contacto</h5>
+                    <p class="mb-1"><i class="fa-solid fa-location-dot me-2 text-success"></i> Campus Soyapango & Antiguo Cuscatlán</p>
+                    <p class="mb-1"><i class="fa-solid fa-building me-2 text-success"></i> Dirección de Proyección Social</p>
+                    <p class="mb-1"><i class="fa-solid fa-envelope me-2 text-success"></i> voluntariado@udb.edu.sv</p>
+                </div>
+            </div>
+
+            <div class="eco-footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                <div>
+                    &copy; @DateTime.Now.Year - <strong>EcoCokie</strong>. Todos los derechos reservados.
+                </div>
+                <div class="text-white-50">
+                    Universidad Don Bosco &bull; El Salvador
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
+    <!-- GSAP 3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <script>
+        try {
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smoothWheel: true
+            });
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+        } catch (e) { }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const statNumbers = document.querySelectorAll(".counter-val");
+            statNumbers.forEach(counter => {
+                const target = parseInt(counter.getAttribute("data-target") || "0", 10);
+                gsap.fromTo(counter, 
+                    { innerText: 0 }, 
+                    { 
+                        innerText: target, 
+                        duration: 1.4, 
+                        ease: "power2.out", 
+                        snap: { innerText: 1 } 
+                    }
+                );
+            });
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

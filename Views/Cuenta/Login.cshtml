@@ -1,0 +1,62 @@
+@model VoluntariadoAmbiental.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="eco-form-card">
+                <div class="text-center mb-4">
+                    <img src="~/img/LogoEcoCokie.png" alt="EcoCokie" style="width: 76px; height: 76px; object-fit: contain; margin-bottom: 10px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));" />
+                    <h4 class="fw-bold mb-1" style="color: var(--color-forest);">Iniciar Sesión en EcoCokie</h4>
+                    <p class="text-muted small">Ingresa con tus credenciales institucionales</p>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model?.ReturnUrl) && Model.ReturnUrl.Contains("Inscribir"))
+                {
+                    <div class="alert alert-info p-3 rounded-3 small mb-3 d-flex align-items-center gap-2 border-0" style="background-color: var(--color-emerald-surface); color: var(--color-emerald-deep);">
+                        <i class="fa-solid fa-circle-info fs-5"></i>
+                        <span>Debes iniciar sesión con tu cuenta de estudiante para poder inscribirte a la convocatoria.</span>
+                    </div>
+                }
+
+                @using (Html.BeginForm("Login", "Cuenta", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.ReturnUrl)
+
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger p-2 small rounded-3" })
+
+                    <div class="eco-input-group mb-3">
+                        <label class="eco-form-label">Correo Electrónico</label>
+                        @Html.TextBoxFor(m => m.sEmail, new { @class = "form-control eco-input", placeholder = "nombre@udb.edu.sv", type = "email", required = "required" })
+                        @Html.ValidationMessageFor(m => m.sEmail, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="eco-input-group mb-3">
+                        <label class="eco-form-label">Contraseña</label>
+                        @Html.PasswordFor(m => m.sPassword, new { @class = "form-control eco-input", placeholder = "••••••••", required = "required" })
+                        @Html.ValidationMessageFor(m => m.sPassword, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(m => m.Recordarme, new { @class = "form-check-input", id = "checkRecordar" })
+                            <label class="form-check-label small text-muted" for="checkRecordar">Mantener sesión iniciada</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-eco-primary w-100 py-2 mb-3">
+                        Acceder
+                    </button>
+                }
+
+                <div class="text-center small text-muted">
+                    ¿No tienes una cuenta aún? 
+                    <a asp-action="Registro" class="text-success fw-semibold text-decoration-none">Regístrate aquí</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
